@@ -14,8 +14,7 @@ rule loader_win_bumblebee {
       uint16be(0) == 0x4d5a and all of them
 }
 
-rule malw_ISO
-{
+rule malw_ISO{
     meta:
       malware = "Identifies execution artefacts in ISO files"
       reference = ""
@@ -29,4 +28,17 @@ strings:
 
 condition:
        uint16(0) != 0x5a4d and 3 of them
+}
+
+rule Windows_Trojan_Bumblebee{
+    strings:
+        $a1 = "Checking Virtual PC processes %s " wide fullword
+        $a2 = "SELECT * FROM Win32_ComputerSystemProduct" ascii fullword
+        $a3 = "Injection-Date" ascii fullword
+        $a4 = " -Command \"Wait-Process -Id " ascii fullword
+        $a5 = "%WINDIR%\\System32\\wscript.exe" wide fullword
+        $a6 = "objShell.Run \"rundll32.exe my_application_path"
+        $a7 = "Checking reg key HARDWARE\\Description\\System - %s is set to %s" wide fullword
+    condition:
+        5 of them
 }
