@@ -13,3 +13,20 @@ rule loader_win_bumblebee {
    condition:
       uint16be(0) == 0x4d5a and all of them
 }
+
+rule malw_ISO
+{
+    meta:
+      malware = "Identifies execution artefacts in ISO files"
+      reference = ""
+      source = "Infinitum IT"
+      classification = "TLP:WHITE"
+strings:
+       $ = "\\System32\\cmd.exe" ascii wide nocase
+       $ = "\\System32\\rundll32.exe" ascii wide nocase
+       $ = "OSTA Compressed Unicode" ascii wide
+       $ = "UDF Image Creator" ascii wide
+
+condition:
+       uint16(0) != 0x5a4d and 3 of them
+}
